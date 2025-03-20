@@ -34,11 +34,15 @@ shelves = [(2, 1), (3, 1), (4, 1), (5,1), (6,1), (7,1), (8,1),
            (2, 8), (3, 8), (4, 8), (5, 8), (6, 8), (7, 8), (8, 8),
            (11, 7), (12, 7), (13, 7), (14, 7), (15, 7), (16, 7), (17, 7),
            (11, 8), (12, 8), (13, 8), (14, 8), (15, 8), (16, 8), (17, 8)]
-pickup_point = (19, 8)
-delivery_point = (0, 8)
 
-# Randomly select a red shelf for delivery
+# Multiple pickup and delivery points
+pickup_points = [(19, 8), (19, 2), (19, 5)]
+delivery_points = [(0, 8), (0, 2), (0, 5)]
+
+# Randomly select a red shelf, pickup point, and delivery point
 red_shelf = random.choice(shelves)
+pickup_point = random.choice(pickup_points)
+delivery_point = random.choice(delivery_points)
 
 # Robots' starting positions
 pink_robot_pos = list(pickup_point)
@@ -59,22 +63,24 @@ def draw_grid():
 
             if (x, y) in shelves:
                 pygame.draw.rect(screen, YELLOW, rect)
-            if (x, y) == delivery_point:
-                pygame.draw.rect(screen, BLUE, rect)
-            if (x, y) == pickup_point:
-                pygame.draw.rect(screen, GRAY, rect)
-            if (x, y) == red_shelf:
-                pygame.draw.circle(screen, RED, rect.center, CELL_SIZE // 3)
+
+    # Draw all pickup points
+    for p in pickup_points:
+        rect = pygame.Rect(p[0] * CELL_SIZE, p[1] * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+        pygame.draw.rect(screen, GRAY, rect)  # Keep them visible
+
+    # Draw all delivery points
+    for d in delivery_points:
+        rect = pygame.Rect(d[0] * CELL_SIZE, d[1] * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+        pygame.draw.rect(screen, BLUE, rect)  # Keep them visible
+
+    # Draw red shelf
+    rect = pygame.Rect(red_shelf[0] * CELL_SIZE, red_shelf[1] * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+    pygame.draw.circle(screen, RED, rect.center, CELL_SIZE // 3)
 
     # Draw robots
     pygame.draw.circle(screen, PINK, (pink_robot_pos[0] * CELL_SIZE + CELL_SIZE // 2, pink_robot_pos[1] * CELL_SIZE + CELL_SIZE // 2), CELL_SIZE // 3)
     pygame.draw.circle(screen, GREEN, (green_robot_pos[0] * CELL_SIZE + CELL_SIZE // 2, green_robot_pos[1] * CELL_SIZE + CELL_SIZE // 2), CELL_SIZE // 3)
-
-    # Draw packages
-    if pink_carrying or green_carrying:
-        pygame.draw.polygon(screen, BLACK, [(pink_robot_pos[0] * CELL_SIZE + 20, pink_robot_pos[1] * CELL_SIZE + 60), (pink_robot_pos[0] * CELL_SIZE + 40, pink_robot_pos[1] * CELL_SIZE + 20), (pink_robot_pos[0] * CELL_SIZE + 60, pink_robot_pos[1] * CELL_SIZE + 60)])
-    elif green_carrying:
-        pygame.draw.polygon(screen, BLACK, [(green_robot_pos[0] * CELL_SIZE + 20, green_robot_pos[1] * CELL_SIZE + 60), (green_robot_pos[0] * CELL_SIZE + 40, green_robot_pos[1] * CELL_SIZE + 20), (green_robot_pos[0] * CELL_SIZE + 60, green_robot_pos[1] * CELL_SIZE + 60)])
 
 running = True
 clock = pygame.time.Clock()
@@ -92,8 +98,15 @@ while running:
             pink_carrying = True
             pink_task = "deliver"
         else:
-            pink_robot_pos[1] -= 1 if pink_robot_pos[1] > pickup_point[1] else -1 if pink_robot_pos[1] < pickup_point[1] else 0
-            pink_robot_pos[0] -= 1 if pink_robot_pos[0] > pickup_point[0] else -1 if pink_robot_pos[0] < pickup_point[0] else 0
+            if pink_robot_pos[1] > pickup_point[1]:
+                pink_robot_pos[1] -= 1
+            elif pink_robot_pos[1] < pickup_point[1]:
+                pink_robot_pos[1] += 1
+
+            if pink_robot_pos[0] > pickup_point[0]:
+                pink_robot_pos[0] -= 1
+            elif pink_robot_pos[0] < pickup_point[0]:
+                pink_robot_pos[0] += 1
 
     elif pink_task == "deliver":
         if pink_robot_pos == list(red_shelf):
@@ -101,8 +114,15 @@ while running:
             pink_task = "wait"
             green_task = "pickup"
         else:
-            pink_robot_pos[1] -= 1 if pink_robot_pos[1] > red_shelf[1] else -1 if pink_robot_pos[1] < red_shelf[1] else 0
-            pink_robot_pos[0] -= 1 if pink_robot_pos[0] > red_shelf[0] else -1 if pink_robot_pos[0] < red_shelf[0] else 0
+            if pink_robot_pos[1] > red_shelf[1]:
+                pink_robot_pos[1] -= 1
+            elif pink_robot_pos[1] < red_shelf[1]:
+                pink_robot_pos[1] += 1
+
+            if pink_robot_pos[0] > red_shelf[0]:
+                pink_robot_pos[0] -= 1
+            elif pink_robot_pos[0] < red_shelf[0]:
+                pink_robot_pos[0] += 1
 
     # --- Green Robot Logic ---
     if green_task == "pickup":
@@ -110,18 +130,34 @@ while running:
             green_carrying = True
             green_task = "deliver"
         else:
-            green_robot_pos[1] -= 1 if green_robot_pos[1] > red_shelf[1] else -1 if green_robot_pos[1] < red_shelf[1] else 0
-            green_robot_pos[0] -= 1 if green_robot_pos[0] > red_shelf[0] else -1 if green_robot_pos[0] < red_shelf[0] else 0
+            if green_robot_pos[1] > red_shelf[1]:
+                green_robot_pos[1] -= 1
+            elif green_robot_pos[1] < red_shelf[1]:
+                green_robot_pos[1] += 1
+
+            if green_robot_pos[0] > red_shelf[0]:
+                green_robot_pos[0] -= 1
+            elif green_robot_pos[0] < red_shelf[0]:
+                green_robot_pos[0] += 1
 
     elif green_task == "deliver":
         if green_robot_pos == list(delivery_point):
             green_carrying = False
             green_task = "wait"
             red_shelf = random.choice(shelves)  # Assign new red shelf
+            pickup_point = random.choice(pickup_points)  # New pickup point
+            delivery_point = random.choice(delivery_points)  # New delivery point
             pink_task = "pickup"
         else:
-            green_robot_pos[1] -= 1 if green_robot_pos[1] > delivery_point[1] else -1 if green_robot_pos[1] < delivery_point[1] else 0
-            green_robot_pos[0] -= 1 if green_robot_pos[0] > delivery_point[0] else -1 if green_robot_pos[0] < delivery_point[0] else 0
+            if green_robot_pos[1] > delivery_point[1]:
+                green_robot_pos[1] -= 1
+            elif green_robot_pos[1] < delivery_point[1]:
+                green_robot_pos[1] += 1
+
+            if green_robot_pos[0] > delivery_point[0]:
+                green_robot_pos[0] -= 1
+            elif green_robot_pos[0] < delivery_point[0]:
+                green_robot_pos[0] += 1
 
     draw_grid()
     pygame.display.flip()
