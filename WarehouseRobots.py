@@ -227,15 +227,17 @@ def draw_grid():
         x, y = pr['pos']
         pygame.draw.circle(screen, PINK, (x * CELL_SIZE + CELL_SIZE // 2, y * CELL_SIZE + CELL_SIZE // 2), CELL_SIZE // 3)
         battery_text = font.render(f"{pr['battery']}%", True, BLACK)
-        screen.blit(battery_text, (x * CELL_SIZE + 5, y * CELL_SIZE + 5))
+        text_rect = battery_text.get_rect(center=(x * CELL_SIZE + CELL_SIZE // 2, y * CELL_SIZE + CELL_SIZE // 2 - CELL_SIZE // 2.2))
+        screen.blit(battery_text, text_rect)
 
     # Draw green robots (deliverers)
     for gr in green_robots:
         x, y = gr['pos']
         pygame.draw.circle(screen, GREEN, (x * CELL_SIZE + CELL_SIZE // 2, y * CELL_SIZE + CELL_SIZE // 2), CELL_SIZE // 3)
-        battery_text = font.render(f"{gr['battery']}%", True, BLACK)
-        screen.blit(battery_text, (x * CELL_SIZE + 5, y * CELL_SIZE + 5))
-
+        battery_text = font.render(f"{pr['battery']}%", True, BLACK)
+        text_rect = battery_text.get_rect(center=(x * CELL_SIZE + CELL_SIZE // 2, y * CELL_SIZE + CELL_SIZE // 2 - CELL_SIZE // 2.2))
+        screen.blit(battery_text, text_rect)
+        
     # Draw shelf contents
     for shelf, info in shelf_inventory.items():
         if info['status'] == 'full':
