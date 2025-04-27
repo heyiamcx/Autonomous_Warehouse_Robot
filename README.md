@@ -70,7 +70,7 @@ python warehouse_simulation.py
   - Some shelves are marked "urgent" (orange) and prioritized for delivery.
  
 - Charging:
-  - Robots do to the nearest available charging station when battery falls below 20&.
+  - Robots do to the nearest available charging station when battery falls below 20%.
   -  After charging to full, they will continue their previous task.
 
 ### Requirements
