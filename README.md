@@ -82,7 +82,15 @@ You can install pygame easily:
 pip install pygame
 ```
 
-## Demo Preview
+### Possible Future Improvements
+- Add more types of robots with different speeds.
+- Improve robot coordination.
+- Optimize pathfinding during heavy congestion.
+- Display task queues and stats in a sidebar.
+
+### Credits
+Created by Yap Jia Yi, Chiew Cui Xuan and Chuah Jia En
+Inspired by warehouse automation systems like Amazon Robotics.
 
 
 
