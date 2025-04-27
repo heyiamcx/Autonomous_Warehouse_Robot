@@ -89,7 +89,7 @@ pip install pygame
 - Display task queues and stats in a sidebar.
 
 ### Credits
-Created by Yap Jia Yi, Chiew Cui Xuan and Chuah Jia En
+Created by Yap Jia Yi, Chiew Cui Xuan and Chuah Jia En  
 Inspired by warehouse automation systems like Amazon Robotics.
 
 
